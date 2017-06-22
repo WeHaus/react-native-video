@@ -79,12 +79,6 @@ export default class Video extends Component {
     }
   };
 
-  _onTimedMetadata = (event) => {
-    if (this.props.onTimedMetadata) {
-      this.props.onTimedMetadata(event.nativeEvent);
-    }
-  };
-
   _onFullscreenPlayerWillPresent = (event) => {
     if (this.props.onFullscreenPlayerWillPresent) {
       this.props.onFullscreenPlayerWillPresent(event.nativeEvent);
@@ -164,7 +158,7 @@ export default class Video extends Component {
       uri = `file://${uri}`;
     }
 
-    const isNetwork = !!(uri && uri.match(/^https?:/));
+    const isNetwork = !!(uri && uri.match(/^https?:/) || uri.match(/^rtsp?:/));
     const isAsset = !!(uri && uri.match(/^(assets-library|file|content|ms-appx|ms-appdata):/));
 
     let nativeResizeMode;
@@ -197,7 +191,6 @@ export default class Video extends Component {
       onVideoSeek: this._onSeek,
       onVideoEnd: this._onEnd,
       onVideoBuffer: this._onBuffer,
-      onTimedMetadata: this._onTimedMetadata,
       onVideoFullscreenPlayerWillPresent: this._onFullscreenPlayerWillPresent,
       onVideoFullscreenPlayerDidPresent: this._onFullscreenPlayerDidPresent,
       onVideoFullscreenPlayerWillDismiss: this._onFullscreenPlayerWillDismiss,
@@ -255,11 +248,12 @@ Video.propTypes = {
   onVideoProgress: PropTypes.func,
   onVideoSeek: PropTypes.func,
   onVideoEnd: PropTypes.func,
-  onTimedMetadata: PropTypes.func,
   onVideoFullscreenPlayerWillPresent: PropTypes.func,
   onVideoFullscreenPlayerDidPresent: PropTypes.func,
   onVideoFullscreenPlayerWillDismiss: PropTypes.func,
   onVideoFullscreenPlayerDidDismiss: PropTypes.func,
+  username: PropTypes.string,
+  password: PropTypes.string,
 
   /* Wrapper component */
   source: PropTypes.oneOfType([
@@ -278,7 +272,6 @@ Video.propTypes = {
   rate: PropTypes.number,
   playInBackground: PropTypes.bool,
   playWhenInactive: PropTypes.bool,
-  ignoreSilentSwitch: PropTypes.oneOf(['ignore', 'obey']),
   disableFocus: PropTypes.bool,
   controls: PropTypes.bool,
   currentTime: PropTypes.number,
